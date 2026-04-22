@@ -273,7 +273,7 @@ _run_in_project() {
     local dir
     dir="$(_find_project_root)" || { echo "No projects recognized in the tree structure"; return 1; }
 
-    (cd "$dir" && {
+    (builtin cd "$dir" && {
         if [ -f package.json ]; then
             case "$cmd_name" in
                 lint) npm run lint ;;
