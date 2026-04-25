@@ -362,3 +362,22 @@ git-clean-old() {
     fi
   done
 }
+
+git-clean-pruned() {
+  # Run git fetch --prune and filter the deleted remote branch
+  prune_output=$(git fetch --prune 2>&1)
+  pruned_branches=$(echo "$prune_output" | grep -oP '\- \[\S+\].+ -> origin/\K.*')
+
+  # For each branch remotly deleted, we check if the branch exist locally and we delete it.
+  # Only local branches that haven't been pushed or merged to the server will remain.
+  # The others will be deleted.
+  for remote_branch in $pruned_branches; do
+    local_branch=${remote_branch#origin/}
+    if git show-ref --verify --quiet refs/heads/"$local_branch"; then
+      echo "Deleting the local branch '$local_branch' (remote branch deleted)"
+      git branch -D "$local_branch"
+    else
+      echo "The '$local_branch' branch has not been deleted locally."
+    fi
+  done
+}
