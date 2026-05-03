@@ -364,6 +364,10 @@ git-clean-old() {
 }
 
 git-clean-pruned() {
+  # Switch to the default branch so that you can remove the working branch
+  # if it has been deleted on the server.
+  git switch $(git symbolic-ref refs/remotes/origin/HEAD | sed 's|refs/remotes/origin/||')
+
   # Run git fetch --prune and filter the deleted remote branch
   prune_output=$(git fetch --prune 2>&1)
   pruned_branches=$(echo "$prune_output" | grep -oP '\- \[\S+\].+ -> origin/\K.*')
