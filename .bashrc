@@ -301,11 +301,11 @@ _run_in_project() {
 }
 
 alias dev="npm run watch"
-lt() { _run_in_project lint; }
+lint() { _run_in_project lint; }
 tu() { _run_in_project test; }
 
 # Git
-alias push="lt && tu && git push -f"
+alias push="lint && tu && git push -f"
 alias clean="git branch --merged | egrep -v '(^\\*|main|master|develop)' | xargs git branch -d"
 alias gprunesquashmerged='git checkout -q develop && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base develop $branch) && [[ $(git cherry develop $(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)) == "-"* ]] && git branch -D $branch; done'
 
