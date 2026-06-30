@@ -243,7 +243,7 @@ wip() {
     # External IP Lookup
     echo -n "External IP: "
     curl -4 ifconfig.me
-    echo -n ""
+    echo
 }
 
 
